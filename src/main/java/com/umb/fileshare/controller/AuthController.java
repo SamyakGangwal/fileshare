@@ -2,9 +2,14 @@ package com.umb.fileshare.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -29,19 +34,33 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("api/auth/login")
-    public LoginResponse login(@RequestBody @Validated LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-            );
+    public ResponseEntity<?> login(@RequestBody @Validated LoginRequest request) {
+        // TODO: move this to service layer
+        // TODO: add specific error whether username or password is invalid
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+            UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
-        List<String> roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+            List<String> roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
-        String token = jwtIssuer.issue(principal.getUserId(), request.getUsername(), roles);
+            String token = jwtIssuer.issue(principal.getUserId(), request.getUsername(), roles);
 
-        return LoginResponse.builder().accessToken(token).build();
+            return ResponseEntity.ok(LoginResponse.builder().accessToken(token).build());
+        } catch (BadCredentialsException e) {
+            log.debug("Invalid username or password", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        } catch (InternalAuthenticationServiceException e) {
+            log.error("Authentication service error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal authentication service error");
+        } catch (AuthenticationException e) {
+            log.error("Authentication failed", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Authentication failed");
+        }
+
     }
 }

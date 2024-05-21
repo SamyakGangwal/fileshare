@@ -1,0 +1,17 @@
+spring.application.name=fileshare
+spring.datasource.url=jdbc:DATABASE_URL
+spring.datasource.username=USERNAME
+spring.datasource.password=PWD
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.defer-datasource-initialization=true
+spring.sql.init.mode=always
+spring.jpa.hibernate.ddl-auto=create
+spring.sql.init.data-locations=classpath:data.sql
+# spring.jpa.hibernate.ddl-auto=<create | create-drop | update | validate | none>
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+security.jwt.secret-key=ADD_YOUR_KEY
+
+# logging.level.org.springframework.web=DEBUG
+# logging.level.org.hibernate=DEBUG
+logging.level.root=INFO

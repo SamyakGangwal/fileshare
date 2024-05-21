@@ -22,7 +22,8 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findUserByEmailOrUsername(username).orElseThrow();
+        User user = userService.findUserByEmailOrUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
 
