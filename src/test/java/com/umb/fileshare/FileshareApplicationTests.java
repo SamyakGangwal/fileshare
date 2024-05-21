@@ -8,6 +8,7 @@ class FileshareApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("TEST");
 	}
 
 }
