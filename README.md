@@ -12,6 +12,7 @@ This project aims to develop a secure, real-time document sharing platform for i
 - Drag-and-drop or browse to upload files (documents, spreadsheets, presentations).
 - Secure file storage with access control.
 - Version control to track changes and revert to previous versions.
+- Support for storing files locally or using cloud services (e.g., AWS S3)
 
 ### Real-time Collaboration:
 - Users can edit the same document simultaneously.
@@ -26,7 +27,7 @@ This project aims to develop a secure, real-time document sharing platform for i
 
 - **Frontend:** ReactJS.
 - **Backend:** Spring Boot with Spring WebFlux for reactive APIs that handle file uploads, downloads, real-time updates, and communication between users.
-- **Database:** MongoDB
+- **Database:** PostgreSQL
 - **Real-time communication:** Implement WebSockets to enable real-time document updates and chat functionality.
 
 ## Implementation Approach:
@@ -39,8 +40,8 @@ This project aims to develop a secure, real-time document sharing platform for i
 ### File Sharing:
 
 - Create APIs using Spring WebFlux to handle file uploads and downloads.
-- Store uploaded files securely in the database (e.g., MongoDB GridFS).
-- Maintain a document metadata table to store file details (name, size, owner, version, permissions).
+- Store file locations in PostgreSQL and support both local file storage and cloud storage solutions (e.g., AWS S3).
+- Maintain a document metadata table in PostgreSQL to store file details (name, size, owner, version, permissions).
 
 ### Real-time Collaboration:
 
@@ -66,10 +67,11 @@ This project aims to develop a secure, real-time document sharing platform for i
 
 - [Spring WebFlux](https://docs.spring.io/spring-framework/reference/web/webflux.html)
 - [Spring Security](https://spring.io/projects/spring-security)
-- [MongoDB](https://www.mongodb.com/)
+- [PostgreSQL](https://www.postgresql.org/)
 - [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 - [Quill Rich Text Editor](https://quilljs.com/)
 - [CodeMirror](https://codemirror.net/)
 - [SockJS](https://github.com/sockjs/sockjs-client)
 - [Pusher](https://pusher.com/)
 - [RabbitMQ](https://www.rabbitmq.com/)
+- [AWS S3](https://aws.amazon.com/s3/)
